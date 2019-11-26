@@ -8,18 +8,20 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "syncDestinations")
 public class SyncDestination {
-    // 2 variables for object
+    // 3 variables for object
     private String name;
     private String description;
+    private String tooltip;
 
     // Default Constructor
     public SyncDestination() {
         //empty
     }
 
-    public SyncDestination(String name, String description) {
+    public SyncDestination(String name, String description, String tooltip) {
         this.name = name;
         this.description = description;
+        this.tooltip = tooltip;
     }
 
     @Id
@@ -39,5 +41,14 @@ public class SyncDestination {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Column(name = "tooltip")
+    public String getTooltip() {
+        return tooltip;
+    }
+
+    public void setTooltip(String tooltip) {
+        this.tooltip = tooltip;
     }
 }
