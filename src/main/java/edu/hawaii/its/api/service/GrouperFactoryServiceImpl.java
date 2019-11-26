@@ -52,6 +52,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -111,8 +114,31 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         List<SyncDestination> syncDest = new ArrayList<>();
         for (WsAttributeDefName wsAttributeDefName : findAttributeDefNamesResults.getAttributeDefNameResults()) {
             if (wsAttributeDefName.getName() != null) {
-                SyncDestination newDest = new SyncDestination(wsAttributeDefName.getName(), wsAttributeDefName.getDescription());
-                syncDest.add(newDest);
+                /*
+                 *  Checks for 2 cases:
+                 *  1) Description field in Grouper has no data stored in it
+                 */
+                if(wsAttributeDefName.getDescription() == null) {
+                    SyncDestination newSyncDest = new SyncDestination(wsAttributeDefName.getName(), null, null);
+                    syncDest.add(newSyncDest);
+                } else {
+                    /*
+                     *  2) There is data in description field but,
+                     *      a. It is a parsable JSON String
+                     *      b. It isn't a parsable JSON String
+                     */
+                    try {
+                        String jsonString = wsAttributeDefName.getDescription();
+                        ObjectMapper mapper = new ObjectMapper();
+                        SyncDestination newSyncDest = mapper.readValue(jsonString, SyncDestination.class);
+                        newSyncDest.setName(wsAttributeDefName.getName());
+                        syncDest.add(newSyncDest);
+                    } catch (IOException e) {
+                        SyncDestination newSyncDest = new SyncDestination(wsAttributeDefName.getName(), wsAttributeDefName.getDescription(), null);
+                        syncDest.add(newSyncDest);
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         System.out.println("getSyncDestTesting: " + syncDest);
