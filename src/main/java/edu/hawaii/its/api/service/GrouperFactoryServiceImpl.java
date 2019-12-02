@@ -121,6 +121,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
                     try {
                         ObjectMapper mapper = new ObjectMapper();
                         newSyncDest = mapper.readValue(jsonString, SyncDestination.class);
+                        newSyncDest.setName(wsAttributeDefName.getName());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
