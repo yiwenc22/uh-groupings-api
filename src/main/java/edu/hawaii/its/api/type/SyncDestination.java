@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+// SyncDest needs to cover for nulls
+
 @Entity
 @Table(name = "syncDestinations")
 public class SyncDestination {
@@ -19,7 +21,7 @@ public class SyncDestination {
     }
 
     public SyncDestination(String name, String description, String tooltip) {
-        this.name = name;
+        this.name = name != null?name:"";
         this.description = description;
         this.tooltip = tooltip;
     }

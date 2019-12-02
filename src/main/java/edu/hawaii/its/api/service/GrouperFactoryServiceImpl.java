@@ -112,33 +112,20 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     public List<SyncDestination> getSyncDestinations() {
         WsFindAttributeDefNamesResults findAttributeDefNamesResults = new GcFindAttributeDefNames().assignScope("uh-settings:attributes:for-groups:uh-grouping:destinations").execute();
         List<SyncDestination> syncDest = new ArrayList<>();
-        for (WsAttributeDefName wsAttributeDefName : findAttributeDefNamesResults.getAttributeDefNameResults()) {
-            if (wsAttributeDefName.getName() != null) {
-                /*
-                 *  Checks for 2 cases:
-                 *  1) Description field in Grouper has no data stored in it
-                 */
-                if(wsAttributeDefName.getDescription() == null) {
-                    SyncDestination newSyncDest = new SyncDestination(wsAttributeDefName.getName(), null, null);
-                    syncDest.add(newSyncDest);
-                } else {
-                    /*
-                     *  2) There is data in description field but,
-                     *      a. It is a parsable JSON String
-                     *      b. It isn't a parsable JSON String
-                     */
+        for(WsAttributeDefName wsAttributeDefName : findAttributeDefNamesResults.getAttributeDefNameResults()) {
+            if(wsAttributeDefName.getName() != null) {
+                SyncDestination newSyncDest = new SyncDestination(wsAttributeDefName.getName(), wsAttributeDefName.getDescription(), null);
+                String jsonString;
+                if((jsonString = wsAttributeDefName.getDescription()) != null) {
+                    // Try catch error thrown by readValue()
                     try {
-                        String jsonString = wsAttributeDefName.getDescription();
                         ObjectMapper mapper = new ObjectMapper();
-                        SyncDestination newSyncDest = mapper.readValue(jsonString, SyncDestination.class);
-                        newSyncDest.setName(wsAttributeDefName.getName());
-                        syncDest.add(newSyncDest);
+                        newSyncDest = mapper.readValue(jsonString, SyncDestination.class);
                     } catch (IOException e) {
-                        SyncDestination newSyncDest = new SyncDestination(wsAttributeDefName.getName(), wsAttributeDefName.getDescription(), null);
-                        syncDest.add(newSyncDest);
                         e.printStackTrace();
                     }
                 }
+                syncDest.add(newSyncDest);
             }
         }
         System.out.println("getSyncDestTesting: " + syncDest);
