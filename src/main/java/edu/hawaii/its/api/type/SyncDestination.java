@@ -4,8 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-// SyncDest needs to cover for nulls
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "syncDestinations")
@@ -20,10 +20,10 @@ public class SyncDestination {
         //empty
     }
 
-    public SyncDestination(String name, String description, String tooltip) {
-        this.name = name != null?name:"";
-        this.description = description;
-        this.tooltip = tooltip;
+    public SyncDestination(String name, String description) {
+        this.name = name != null ? name : "";
+        this.description = description != null ? description : "";
+        this.tooltip = null;
     }
 
     @Id
@@ -52,5 +52,13 @@ public class SyncDestination {
 
     public void setTooltip(String tooltip) {
         this.tooltip = tooltip;
+    }
+
+    public String parseKeyVal(String replace, String desc) {
+        final String regex = "(\\$\\{)(.*)(})";
+
+        String result = desc.replaceFirst(regex, replace);
+
+        return result;
     }
 }

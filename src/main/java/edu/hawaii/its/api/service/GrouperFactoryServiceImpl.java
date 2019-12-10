@@ -112,22 +112,19 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     public List<SyncDestination> getSyncDestinations() {
         WsFindAttributeDefNamesResults findAttributeDefNamesResults = new GcFindAttributeDefNames().assignScope("uh-settings:attributes:for-groups:uh-grouping:destinations").execute();
         List<SyncDestination> syncDest = new ArrayList<>();
-        for(WsAttributeDefName wsAttributeDefName : findAttributeDefNamesResults.getAttributeDefNameResults()) {
-            if(wsAttributeDefName.getName() != null) {
-                SyncDestination newSyncDest = new SyncDestination(wsAttributeDefName.getName(), wsAttributeDefName.getDescription(), null);
-                String jsonString;
-                if((jsonString = wsAttributeDefName.getDescription()) != null) {
-                    // Try catch error thrown by readValue()
-                    try {
-                        ObjectMapper mapper = new ObjectMapper();
-                        newSyncDest = mapper.readValue(jsonString, SyncDestination.class);
-                        newSyncDest.setName(wsAttributeDefName.getName());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        for (WsAttributeDefName wsAttributeDefName : findAttributeDefNamesResults.getAttributeDefNameResults()) {
+            SyncDestination newSyncDest = new SyncDestination(wsAttributeDefName.getName(), wsAttributeDefName.getDescription());
+            if ((newSyncDest.getName() != null) && (newSyncDest.getDescription() != null)) {
+                String jsonString = newSyncDest.getDescription();
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    newSyncDest = mapper.readValue(jsonString, SyncDestination.class);
+                    newSyncDest.setName(wsAttributeDefName.getName());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                syncDest.add(newSyncDest);
             }
+            syncDest.add(newSyncDest);
         }
         System.out.println("getSyncDestTesting: " + syncDest);
         return syncDest;
