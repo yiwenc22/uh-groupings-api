@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 @Entity
 @Table(name = "syncDestinations")
@@ -56,8 +57,15 @@ public class SyncDestination {
 
     public String parseKeyVal(String replace, String desc) {
         final String regex = "(\\$\\{)(.*)(})";
+        String result;
 
-        String result = desc.replaceFirst(regex, replace);
+        try {
+             result = desc.replaceFirst(regex, replace);
+        } catch(PatternSyntaxException e) {
+            result = desc;
+            e.printStackTrace();
+        }
+
 
         return result;
     }

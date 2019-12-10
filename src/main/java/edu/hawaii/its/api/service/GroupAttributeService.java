@@ -2,7 +2,6 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.SyncDestination;
-import edu.hawaii.its.api.type.Grouping;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public interface GroupAttributeService {
 
     boolean isGroupAttribute(String groupPath, String attribute);
 
-    List<SyncDestination> getAllSyncDestinations(String currentUsername);
+    List<SyncDestination> getAllSyncDestinations(String currentUsername, String path);
 
     List<SyncDestination> getAllSyncDestinations();
 

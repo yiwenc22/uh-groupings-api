@@ -169,10 +169,18 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     @Autowired
     private MembershipService membershipService;
 
+    @Autowired
+    private GroupingAssignmentService groupingAssignmentService;
+
     @Override
-    public List<SyncDestination> getAllSyncDestinations(String currentUsername) {
+    public List<SyncDestination> getAllSyncDestinations(String currentUsername, String path) {
         if (memberAttributeService.isOwner(currentUsername) || memberAttributeService.isSuperuser(currentUsername)) {
-            return getAllSyncDestinations();
+            Grouping grouping = groupingAssignmentService.getGrouping(path, currentUsername);
+            List<SyncDestination> finSyncDestList = getAllSyncDestinations();
+            for(SyncDestination dest : finSyncDestList) {
+                dest.setDescription(dest.parseKeyVal(grouping.getName(), dest.getDescription()));
+            }
+            return finSyncDestList;
         } else {
             throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
         }

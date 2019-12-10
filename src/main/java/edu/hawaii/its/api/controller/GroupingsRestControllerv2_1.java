@@ -190,16 +190,16 @@ public class GroupingsRestControllerv2_1 {
   /**
    * Get the list of sync destinations
    */
-  @RequestMapping(value = "/groupings/syncDestinations",
+  @RequestMapping(value = "/groupings/{path}/syncDestinations",
       method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public ResponseEntity<List<SyncDestination>> getSyncDestinations(@RequestHeader("current_user") String currentUser)
-      throws Exception {
+  public ResponseEntity<List<SyncDestination>> getSyncDestinations(@RequestHeader("current_user") String currentUser,
+                                                                   @PathVariable String path) throws Exception {
     logger.info("Entered REST getAllSyncDestinations...");
     return ResponseEntity
         .ok()
-        .body(groupAttributeService.getAllSyncDestinations(currentUser));
+        .body(groupAttributeService.getAllSyncDestinations(currentUser, path));
   }
 
   /**
