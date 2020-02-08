@@ -337,6 +337,12 @@ public class GroupingsRestControllerv2_1 {
   }
 
   /**
+   *
+   * Create the responding rest call here to receive the information to delete multiple members
+   *
+   */
+
+  /**
    * Update grouping to add new exclude member
    *
    * @param path: path of grouping to update

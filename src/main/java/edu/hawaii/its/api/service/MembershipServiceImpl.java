@@ -252,6 +252,18 @@ public class MembershipServiceImpl implements MembershipService {
         return gsrs;
     }
 
+    /**
+     *
+     * deleteGroupMembers(owner, path, users)
+     *
+     * same syntax as addGroupMembers
+     *
+     * foreach {
+     *     deleteGroupMember
+     * }
+     *
+     */
+
     //finds a user by a username and adds that user to the group
     @Override
     public List<GroupingsServiceResult> addGroupMember(String ownerUsername, String groupPath,
