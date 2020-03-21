@@ -6,6 +6,7 @@ import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingAssignment;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.MembershipAssignment;
 import edu.hawaii.its.api.type.Person;
 import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
@@ -444,6 +445,17 @@ public class TestGroupingAssignmentService {
         assertFalse(usernames.contains(this.usernames[3]));
         assertTrue(usernames.contains(this.usernames[4]));
         assertTrue(usernames.contains(this.usernames[5]));
+    }
+
+    @Test
+    public void basisTesting() {
+        MembershipAssignment test = groupingAssignmentService.getMembershipAssignment(ADMIN, "kahlin");
+
+        for (Grouping group:test.getGroupingsIn()) {
+            System.out.println("In basis: " + test.isInBasis(group.getName()));
+        }
+
+        System.out.println(test.getJsonMap());
     }
 
     @Test

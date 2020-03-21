@@ -21,6 +21,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsStemLookup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -344,10 +345,19 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     public MembershipAssignment getMembershipAssignment(String username, String uid) {
         MembershipAssignment membershipAssignment = new MembershipAssignment();
         List<String> groupPaths = getGroupPaths(username, uid);
+        List<Grouping> groupings = groupingsIn(groupPaths);
 
-        membershipAssignment.setGroupingsIn(groupingsIn(groupPaths));
+        membershipAssignment.setGroupingsIn(groupings);
         membershipAssignment.setGroupingsToOptInTo(groupingsToOptInto(username, groupPaths));
+        for (Grouping grouping:groupings) {
+            membershipAssignment.addInBasis(grouping.getName(), memberAttributeService.isMember(grouping.getPath() + ":basis", uid));
+        }
 
+        try {
+            membershipAssignment.setJsonMap();
+        } catch (JsonProcessingException e){
+
+        }
         return membershipAssignment;
     }
 
@@ -514,6 +524,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
         boolean isOptInOn = false;
         boolean isOptOutOn = false;
+        boolean isBasis = false;
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
                 grouperFactoryService.makeWsGetAttributeAssignmentsResultsForGroup(
