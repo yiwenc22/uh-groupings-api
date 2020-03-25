@@ -22,6 +22,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.JsonObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -344,6 +345,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     @Override
     public MembershipAssignment getMembershipAssignment(String username, String uid) {
         MembershipAssignment membershipAssignment = new MembershipAssignment();
+        JsonObject includeJson = new JsonObject();
         List<String> groupPaths = getGroupPaths(username, uid);
         List<Grouping> groupings = groupingsIn(groupPaths);
 
@@ -351,6 +353,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
         membershipAssignment.setGroupingsToOptInTo(groupingsToOptInto(username, groupPaths));
         for (Grouping grouping:groupings) {
             membershipAssignment.addInBasis(grouping.getName(), memberAttributeService.isMember(grouping.getPath() + ":basis", uid));
+            includeJson.addProperty(grouping.getName(), memberAttributeService.isMember(grouping.getPath() + ":include", uid));
         }
 
         try {
@@ -358,6 +361,9 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
         } catch (JsonProcessingException e){
 
         }
+
+        membershipAssignment.setIncludeJson(includeJson);
+
         return membershipAssignment;
     }
 

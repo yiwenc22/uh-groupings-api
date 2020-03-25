@@ -2,8 +2,7 @@ package edu.hawaii.its.api.type;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.ArrayList;
+import com.google.gson.JsonObject;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -13,6 +12,15 @@ public class MembershipAssignment {
     private List<Grouping> groupingsToOptInTo;
     private String jsonMap;
     private Map<String, Boolean> inBasis = new HashMap<>();
+    private JsonObject includeJson;
+
+    public void setIncludeJson(JsonObject json) {
+        this.includeJson = json;
+    }
+
+    public JsonObject getIncludeJson() {
+        return includeJson;
+    }
 
     public List<Grouping> getGroupingsIn() {
         return groupingsIn;

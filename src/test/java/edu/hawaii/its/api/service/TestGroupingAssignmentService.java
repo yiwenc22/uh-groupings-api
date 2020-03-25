@@ -11,6 +11,8 @@ import edu.hawaii.its.api.type.Person;
 import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
+
+import com.google.gson.JsonObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
@@ -449,13 +451,22 @@ public class TestGroupingAssignmentService {
 
     @Test
     public void basisTesting() {
+//        JsonObject person = new JsonObject();
+//        person.addProperty("firstName", "Sergey");
+//        person.addProperty("lastName", "Kargopolov");
+//        System.out.println(person.toString());
+
         MembershipAssignment test = groupingAssignmentService.getMembershipAssignment(ADMIN, "kahlin");
 
-        for (Grouping group:test.getGroupingsIn()) {
-            System.out.println("In basis: " + test.isInBasis(group.getName()));
-        }
+//        for (Grouping group:test.getGroupingsIn()) {
+//            System.out.println("In basis: " + test.isInBasis(group.getName()));
+//        }
 
-        System.out.println(test.getJsonMap());
+//        for (Grouping group:test.getGroupingsIn()) {
+//            System.out.println("In basis: " + test.getIncludeJson());
+//        }
+
+//        System.out.println(test.getIncludeJson());
     }
 
     @Test
