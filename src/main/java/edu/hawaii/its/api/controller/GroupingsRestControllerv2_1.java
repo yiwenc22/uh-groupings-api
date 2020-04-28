@@ -342,7 +342,7 @@ public class GroupingsRestControllerv2_1 {
         logger.info("Entered REST deleteMembers");
         return ResponseEntity
                 .ok()
-                .body(membershipService.deleteGroupMembers(currentUser, path + EXCLUDE, uids));
+                .body(membershipService.removeGroupMembers(currentUser, path + EXCLUDE, uids));
     }
 
     /**
@@ -361,7 +361,7 @@ public class GroupingsRestControllerv2_1 {
         logger.info("Entered REST deleteMembers");
         return ResponseEntity
                 .ok()
-                .body(membershipService.deleteGroupMembers(currentUser, path + EXCLUDE, uids));
+                .body(membershipService.removeGroupMembers(currentUser, path + EXCLUDE, uids));
     }
 
     /**
