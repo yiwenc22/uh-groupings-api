@@ -329,6 +329,7 @@ public class MembershipServiceImpl implements MembershipService {
         }
 
         List<String> membersRemoved;
+
         String action = "removeGroupMembers; " +
                 "currentUser: " + currentUser + "; " +
                 "groupPath: " + groupPath + "; " +
@@ -350,8 +351,13 @@ public class MembershipServiceImpl implements MembershipService {
         updateLastModified(composite);
         updateLastModified(groupPath);
 
+        membersToRemove.removeAll(membersRemoved);
+
+        action += " membersNotRemoved: " + membersToRemove + "; ";
+        logger.info(action);
+
         return new GenericServiceResult(helperService.makeGroupingsServiceResult(removeMemberResults, action),
-                Arrays.asList("membersToRemove", "membersRemoved"), membersToRemove, membersRemoved);
+                Arrays.asList("membersNotRemoved", "membersRemoved"), membersToRemove, membersRemoved);
     }
 
     /**
