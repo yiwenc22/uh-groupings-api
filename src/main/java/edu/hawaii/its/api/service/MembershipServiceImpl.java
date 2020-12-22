@@ -1108,4 +1108,8 @@ public class MembershipServiceImpl implements MembershipService {
         this.grouperFS = grouperFactoryService;
     }
 
+    public void setMemberAttributeService(MemberAttributeService memberAttributeService) {
+        this.memberAttributeService = memberAttributeService;
+    }
+
 }
