@@ -1,10 +1,15 @@
 package edu.hawaii.its.api.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import edu.hawaii.its.api.access.User;
+import edu.hawaii.its.api.access.UserContextService;
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
+import edu.hawaii.its.api.controller.WithMockUhUser;
 import edu.hawaii.its.api.repository.GroupRepository;
 import edu.hawaii.its.api.repository.GroupingRepository;
 import edu.hawaii.its.api.repository.MembershipRepository;
@@ -112,6 +117,8 @@ public class MembershipServiceTest {
     private List<Person> users = new ArrayList<>();
     private List<WsSubjectLookup> lookups = new ArrayList<>();
 
+    public static final Log logger = LogFactory.getLog(MembershipServiceImpl.class);
+
     @Autowired
     private MembershipService membershipService;
 
@@ -132,6 +139,9 @@ public class MembershipServiceTest {
 
     @Autowired
     private DatabaseSetupService databaseSetupService;
+
+    @Autowired
+    private UserContextService userContextService;
 
     @Before
     public void setup() {
@@ -154,6 +164,17 @@ public class MembershipServiceTest {
         assertThat(membershipService.isUhUuid("0000"), is(true));
         // Null.
         assertThat(membershipService.isUhUuid(null), is(false));
+    }
+
+    @Test
+    @WithMockUhUser(username = "testUser", roles = {"ADMIN","OWNER"})
+    public void UserMemberships() {
+        MemberAttributeServiceImpl memberAttributeService = new MemberAttributeServiceImpl();
+
+        User user = userContextService.getCurrentUser();
+        logger.info(user + "----------------------------------------------------");
+
+        memberAttributeService.assignOwnership(GROUPING_1_EXCLUDE_PATH, user.getName(), user.getName());
     }
 
     @Test
